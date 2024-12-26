@@ -1,0 +1,174 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+
+void PrintResult(int32_t*, int32_t);
+void InputSize(int32_t&);
+bool CheckSize(int32_t);
+void InputArrayElements(int32_t*, int32_t);
+void InputKthPosition(int32_t&);
+void LeftShiftArray(int32_t*, int32_t, int32_t k);
+void MergeAndSortArrays(int32_t*, int32_t, int32_t*, int32_t, int32_t*);
+bool CheckSorting(int32_t*, int32_t);
+void DefineSize3(int32_t, int32_t, int32_t&);
+int64_t CountSum(int32_t*, int32_t);
+int64_t CountEvenSum(int32_t*, int32_t);
+double CalculateAverage(int32_t*, int32_t);
+void ReplaceNegativesWithZero(int32_t*, int32_t);
+
+int main() {
+    const int32_t MAX_SIZE{100};
+    int32_t arr1[MAX_SIZE]{};
+    int32_t arr2[MAX_SIZE]{};
+    int32_t arr3[MAX_SIZE]{};
+    int32_t size1{};
+    int32_t size2{};
+    int32_t size3{};
+
+    InputSize(size1);
+    if (!CheckSize(size1)) {
+        std::cout << "Incorrect array size entered, please re-enter\n";
+        return 0;
+    }
+    InputArrayElements(arr1, size1);
+
+    std::cout << "Sum of elements of array: " << CountSum(arr1, size1) << "\n";
+    std::cout << "Sum of even elements of array: " << CountEvenSum(arr1, size1) << "\n";
+    std::cout << "Average of array elements: " << CalculateAverage(arr1, size1) << "\n";
+
+    ReplaceNegativesWithZero(arr1, size1);
+    std::cout << "Array after replacing negatives with zero: ";
+    PrintResult(arr1, size1);
+
+    int32_t k;
+    InputKthPosition(k);
+    LeftShiftArray(arr1, size1, k);
+    std::cout << "Array after left shift from position " << k << ": ";
+    PrintResult(arr1, size1);
+
+    InputSize(size2);
+    if (!CheckSize(size2)) {
+        std::cout << "Incorrect array size entered, please re-enter\n";
+        return 0;
+    }
+    InputArrayElements(arr2, size2);
+
+    DefineSize3(size1, size2, size3);
+    MergeAndSortArrays(arr1, size1, arr2, size2, arr3);
+    PrintResult(arr3, size3);
+
+    if (CheckSorting(arr3, size3)) {
+        std::cout << "\nArray is sorted correctly.\n";
+    } else {
+        std::cout << "\nArray is not sorted.\n";
+    }
+
+    return 0;
+}
+
+void InputSize(int32_t& size) {
+    std::cout << "Enter size for array:\n";
+    std::cin >> size;
+}
+
+bool CheckSize(int32_t size) {
+    return size > 0 && size <= 100;
+}
+
+void InputArrayElements(int32_t* arr, int32_t size) {
+    std::cout << "Enter elements of array:\n";
+    for (int32_t i = 0; i < size; ++i) {
+        std::cin >> arr[i];
+    }
+}
+
+void InputKthPosition(int32_t& transformation) {
+    std::cout << "Enter position k for left shift: ";
+    std::cin >> transformation;
+}
+
+void LeftShiftArray(int32_t* array, int32_t size, int32_t k) {
+    if (k < 0 || k >= size) {
+        std::cout << "Invalid position for left shift\n";
+        return;
+    }
+
+    int32_t temp[size - k];
+    for (int32_t i = 0; i < size - k; ++i) {
+        temp[i] = array[k + i];
+    }
+    for (int32_t i = 0; i < k; ++i) {
+        array[size - k + i] = array[i];
+    }
+    for (int32_t i = 0; i < size - k; ++i) {
+        array[i] = temp[i];
+    }
+}
+
+void MergeAndSortArrays(int32_t* array1, int32_t size1, int32_t* array2, int32_t size2, int32_t* resultArray) {
+    int32_t i = 0, j = 0, k = 0;
+    while (i < size1 && j < size2) {
+        if (array1[i] < array2[j]) {
+            resultArray[k++] = array1[i++];
+        } else {
+            resultArray[k++] = array2[j++];
+        }
+    }
+    while (i < size1) {
+        resultArray[k++] = array1[i++];
+    }
+    while (j < size2) {
+        resultArray[k++] = array2[j++];
+    }
+    std::sort(resultArray, resultArray + size1 + size2);
+}
+
+bool CheckSorting(int32_t* arr, int32_t size) {
+    for (size_t i{}; i < size - 1; ++i) {
+        if (arr[i] > arr[i + 1]) {
+            std::cout << "\nSorting on the " << i + 2 << "th element is broken\n";
+            return false;
+        }
+    }
+    return true;
+}
+
+void PrintResult(int32_t* arr, int32_t size) {
+    std::cout << "Result:\n";
+    for (int32_t i = 0; i < size; ++i) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << '\n';
+}
+
+void DefineSize3(int32_t size1, int32_t size2, int32_t& size3) {
+    size3 = size1 + size2;
+}
+
+int64_t CountSum(int32_t* array, int32_t size) {
+    int64_t sum{};
+    for (int32_t i = 0; i < size; ++i) {
+        sum += array[i];
+    }
+    return sum;
+}
+
+int64_t CountEvenSum(int32_t* array, int32_t size) {
+    int64_t sum{};
+    for (int32_t i = 0; i < size; i += 2) {
+        sum += array[i];
+    }
+    return sum;
+}
+
+double CalculateAverage(int32_t* array, int32_t size) {
+    return static_cast<double>(CountSum(array, size)) / size;
+}
+
+void ReplaceNegativesWithZero(int32_t* array, int32_t size) {
+    for (int32_t i = 0; i < size; ++i) {
+        if (array[i] < 0) {
+            array[i] = 0;
+        }
+    }
+}
