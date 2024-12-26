@@ -1,0 +1,60 @@
+
+#include <iostream>
+int32_t InputNumber();
+bool CheckNaturalness(int32_t number);
+int32_t CountOfDigits(int32_t amount);
+int32_t AddCentralDigit(int32_t number);
+int main()
+{
+    
+    int32_t number = InputNumber();
+    if (!CheckNaturalness(number))
+    {
+        std::cout << "not natural number ";
+        return 0;
+    }
+
+    int32_t result = AddCentralDigit(number);
+    std::cout << "number: " << result << "\n";
+
+    return 0;
+}
+int32_t InputNumber()
+{
+    int32_t number;
+    std::cout << "Enter a natural number: ";
+    std::cin >> number;
+    return number;
+}
+bool CheckNaturalness(int32_t number)
+{
+    return number > 0;
+}
+int32_t CountOfDigits(int32_t amount)
+{
+    int32_t count = 0;
+    while (amount > 0)
+    {
+        count++;
+        amount /= 10;
+    }
+    return count;
+}
+int32_t AddCentralDigit(int32_t number)
+{
+    int32_t digits = CountOfDigits(number);
+    if (digits % 2 == 0)
+    {
+        return number;
+    }
+    int32_t middleIndex = digits / 2;
+    int32_t temp = number;
+    int32_t centralDigit = 0;
+    for (int32_t i = 0; i <= middleIndex; i++)
+    {
+        centralDigit = temp % 10;
+        temp /= 10;
+    }
+    int32_t multiplier = std::pow(10, digits);
+    return centralDigit * multiplier * 10 + number * 10 + centralDigit;
+}
