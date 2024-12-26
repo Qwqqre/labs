@@ -1,0 +1,54 @@
+#include <iostream>
+bool CheckDenominator(uint32_t denom);
+uint32_t GCD(uint32_t a, uint32_t b);
+void PrintFractions(uint32_t maxDenom);
+
+int main()
+{
+    int32_t maxDenom;
+    std::cout << "Input limit for denominator: ";
+    std::cin >> maxDenom;
+
+    if (maxDenom <= 1)
+    {
+        std::cout << "Limit must be higher than 1." << std::endl;
+        return 1;
+    }
+
+    std::cout << "Irreducible fractions between 1 and 0 with denominators less than " << maxDenom << ":" << std::endl;
+    PrintFractions(maxDenom);
+
+    return 0;
+}
+bool CheckDenominator(uint32_t denom)
+{
+    return denom > 1;
+}
+uint32_t GCD(uint32_t a, uint32_t b)
+{
+    while (b != 0)
+    {
+        uint32_t temp{b};
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+void PrintFractions(uint32_t maxDenom)
+{
+    for (uint32_t denom = 2; denom < maxDenom; ++denom)
+    {
+        if (!CheckDenominator(denom))
+        {
+            continue;
+        }
+        for (uint32_t numer = 1; numer < denom; ++numer)
+        {
+            if (GCD(numer, denom) == 1)
+            {
+                std::cout << numer << "/" << denom << std::endl;
+            }
+        }
+    }
+}
+
