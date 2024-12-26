@@ -1,0 +1,69 @@
+#include <iostream>
+bool IsStrictlyIncreasing(int32_t nunber);
+bool AreNaturalNumbers(int32_t start, int32_t end);
+void InputRange(int32_t& start, int32_t& end);
+void SwapIfNeeded(int32_t& start, int32_t& end);
+int main()
+{
+    int32_t start, end;
+
+    InputRange(start, end);
+
+    if (!AreNaturalNumbers(start, end))
+    {
+        std::cout << "One or both numbers are not natural numbers." << std::endl;
+        return 1;
+    }
+
+    SwapIfNeeded(start, end);
+
+    std::cout << "Numbers with a strictly increasing sequence of digits in the range from " << start << " to " << end << "):\n";
+
+    for (int32_t num = start; num <= end; ++num)
+    {
+        if (IsStrictlyIncreasing(num))
+        {
+            std::cout << num << " ";
+        }
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+bool IsStrictlyIncreasing(int32_t number)
+{
+    int32_t prev_digit{10};
+    while (number > 0)
+    {
+        int32_t current_digit = number % 10;
+        if (current_digit >= prev_digit)
+        {
+            return false;
+        }
+        prev_digit = current_digit;
+        number /= 10;
+    }
+    return true;
+}
+bool AreNaturalNumbers(int32_t start, int32_t end)
+{
+    return start > 0 && end > 0;
+}
+void InputRange(int32_t& start, int32_t& end)
+{
+    std::cout << "Enter the start of the range (start): ";
+    std::cin >> start;
+    std::cout << "Enter the end of the range (end): ";
+    std::cin >> end;
+}
+void SwapIfNeeded(int32_t& start, int32_t& end)
+{
+    if (end < start)
+    {
+        int32_t temp = start;
+        start = end;
+        end = temp;
+        std::cout << "Start amount is higher then end amount, so we swap them";
+    }
+}
+
