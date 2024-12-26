@@ -1,0 +1,41 @@
+#define _USE_MATH_DEFINES
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+
+int main()
+{
+  using std::cout;
+  using std::cin;
+
+  double x{};
+  int32_t k{};
+  long double rezult{ M_PI / 2 };
+  double n{ 1 };
+  cout << "Enter the x = ";
+  cin >> x;
+  if (x <= -1 || x >= 1) {       
+    cout << "incorrect x \n";
+  }
+  else {
+    cout << "Enter the k = ";     
+    cin >> k;
+    if (k <= 0) {
+      cout << "incorrect k \n";
+    }
+    else {
+      double epsilont = (1 / pow(10, k));     
+      cout << "The arcctg(" << x << ") = " << std::setprecision(16) << M_PI / 2 - atan(x);   
+      double nextElem = -x ;
+      while (abs(nextElem) >= epsilont) {
+        rezult += nextElem;
+        nextElem *= (-1) * x * x * (2 * n - 1) / ( 1 + n * 2 );      
+        n += 1;
+      }
+
+      cout << "\nThe row of Taylor (" << x << ") = " << rezult;   
+    }
+  }
+  system("pause");
+  return 0;
+}
