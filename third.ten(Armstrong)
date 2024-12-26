@@ -1,0 +1,60 @@
+#include <iostream>
+void InputNumber(int32_t& Number);
+bool IsNatural(int32_t Number);
+int32_t CountDigits(int32_t number);
+bool IsArmstrong(int32_t number);
+int main()
+{
+    int32_t Number;
+    InputNumber(Number);
+    if (!IsNatural(Number))
+    {
+
+        std::cout << "incorect number ";
+        return 0;
+    }
+    
+    std::cout << "Armstrong numbers up to " << Number << ":\n";
+    for (int32_t i = 1; i <= Number; i++)
+    {
+        if (IsArmstrong(i))
+        {
+            std::cout << i << " ";
+        }
+    }
+    
+    return 0;
+}
+void InputNumber(int32_t& Number)
+{
+    std::cout << "Enter  Number: ";
+    std::cin >> Number;
+}
+
+bool IsNatural(int32_t Number) {
+    return Number > 0;
+}
+int32_t CountDigits(int32_t number) {
+    int32_t count{0};
+    while (number > 0) {
+        count++;
+        number /= 10;
+    }
+    return count;
+}
+bool IsArmstrong(int32_t number)
+{
+    int32_t original = number;
+    int32_t digits = CountDigits(number);
+    int32_t sum{0};
+
+    while (number > 0)
+    {
+        int32_t digit = number % 10;
+        sum += std::pow(digit, digits);  // Подсчет числа цифр
+        number /= 10;
+    }
+
+    return sum == original;
+}
+
