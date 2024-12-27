@@ -1,95 +1,89 @@
-#include <iostream>
-
-void InputElementsOfArray(uint64_t* array, int64_t size);
-bool CheckNaturalness(uint64_t number);
-uint64_t CountSumOfDigits(uint64_t number);
-uint64_t CountSumOfArrayElements(uint64_t* array, int64_t size);
-uint64_t CountAmountOfDigits(uint64_t number);
-void PrintFibonacci(uint64_t n, uint64_t first = 0, uint64_t second = 1, uint64_t count = 0);
-
-int main() {
-    int64_t size;
-    std::cout << "Enter the size of the array: ";
-    std::cin >> size;
-
-    if (size <= 0 || size > 100) {
-        std::cout << "Invalid array size" << std::endl;
-        return 1;
-    }
-
-    uint64_t array[100];
-    
-    uint64_t Number;
-    std::cout << "Enter Natural Number: ";
-    std::cin >> Number;
-
-    if (!CheckNaturalness(Number)) {
-        std::cout << "Incorrect number" << std::endl;
-        return 1;
-    }
-
-    std::cout << "Sum of Digits = " << CountSumOfDigits(Number) << std::endl;
-
-    std::cout << "Input Elements of Array:" << std::endl;
-    InputElementsOfArray(array, size);
-
-    std::cout << "Sum of Array Elements = " << CountSumOfArrayElements(array, size) << std::endl;
-
-    std::cout << "Amount of Digits in " << Number << " = " << CountAmountOfDigits(Number) << std::endl;
-
-    uint64_t fibonacciCount;
-    std::cout << "Enter the number of Fibonacci numbers to calculate: ";
-    std::cin >> fibonacciCount;
-
-    if (fibonacciCount > 0) {
-        std::cout << "First " << fibonacciCount << " Fibonacci numbers: ";
-        PrintFibonacci(fibonacciCount);
-        std::cout << std::endl;
-    } else {
-        std::cout << "Invalid count for Fibonacci numbers." << std::endl;
-    }
-
-    return 0;
+#include <iostream> 
+#include <locale> 
+void InputElementsOfArray(uint64_t* array, int64_t size); 
+bool CheckNaturalness(uint64_t num); 
+uint64_t SumOfDigits(uint64_t num); 
+uint64_t SumOfArrayEl(uint64_t* array, int64_t size); 
+uint64_t AmountOfDigits(uint64_t num); 
+void Fibonacci(uint64_t n, uint64_t first = 0, uint64_t second = 1, uint64_t count = 0); 
+ 
+int main() { 
+    uint64_t num; 
+    std::cout << "Input natural number: "; 
+    std::cin >> num; 
+ 
+    if (!CheckNaturalness(num)) { 
+        std::cout << "Incorrect number" << std::endl; 
+        return 1; 
+    } 
+ 
+    std::cout << "Sum of digits = " << SumOfDigits(num) << std::endl; 
+ 
+    std::cout << "Amount of digits" << num << " = " << AmountOfDigits(num) << std::endl; 
+ 
+    int64_t size; 
+    std::cout << "Input array size: "; 
+    std::cin >> size; 
+ 
+    if (size <= 0 || size > 100) { 
+        std::cout << "Wrong array size" << std::endl; 
+        return 1; 
+    } 
+ 
+    uint64_t array[100]; 
+ 
+    std::cout << "Input elements of array:" << std::endl; 
+    InputElementsOfArray(array, size); 
+ 
+    std::cout << "Sum of array elements = " << SumOfArrayEl(array, size) << std::endl; 
+ 
+ 
+    uint64_t fibonacciCount; 
+    std::cout << "Input amount of Fibonachi numbers to calculate: "; 
+    std::cin >> fibonacciCount; 
+ 
+    if (fibonacciCount > 0) { 
+        std::cout << "First " << fibonacciCount << " Fibonachi numbers: "; 
+        Fibonacci(fibonacciCount); 
+        std::cout << std::endl; 
+    } 
+    else { 
+        std::cout << "Incorrect amount of Fibonachi numbers." << std::endl; 
+    } 
+ 
+    return 0; 
+} 
+void InputElementsOfArray(uint64_t* array, int64_t size) { 
+    for (int64_t i = 0; i < size; ++i) { 
+        std::cout << "Input elements " << i + 1 << ": "; 
+        std::cin >> array[i]; 
+    } 
+} 
+bool CheckNaturalness(uint64_t num) { 
+    return num > 0; 
+} 
+uint64_t SumOfDigits(uint64_t num) { 
+    if (num == 0) { 
+        return 0; 
+    } 
+    return num % 10 + SumOfDigits(num / 10); 
+} 
+uint64_t SumOfArrayEl(uint64_t* array, int64_t size) { 
+    if (size <= 0) { 
+        return 0; 
+    } 
+    return array[size - 1] + SumOfArrayEl(array, size - 1); 
+} 
+uint64_t AmountOfDigits(uint64_t num) { 
+    if (num == 0) { 
+        return 0; 
+    } 
+    return 1 + AmountOfDigits(num / 10); 
+} 
+void Fibonacci(uint64_t n, uint64_t first, uint64_t second, uint64_t count) { 
+    if (count == n) { 
+        return; 
+    } 
+    std::cout << first << " "; 
+    Fibonacci(n, second, first + second, count + 1); 
 }
-
-void InputElementsOfArray(uint64_t* array, int64_t size) {
-    for (int64_t i = 0; i < size; ++i) {
-        std::cout << "Enter Element " << i + 1 << ": ";
-        std::cin >> array[i];
-    }
-}
-
-bool CheckNaturalness(uint64_t number) {
-    return number > 0;
-}
-
-uint64_t CountSumOfDigits(uint64_t number) {
-    if (number == 0) {
-        return 0;
-    }
-    return number % 10 + CountSumOfDigits(number / 10);
-}
-
-uint64_t CountSumOfArrayElements(uint64_t* array, int64_t size) {
-    uint64_t sum = 0;
-    for (int64_t i = 0; i < size; ++i) {
-        sum += array[i];
-    }
-    return sum;
-}
-
-uint64_t CountAmountOfDigits(uint64_t number) {
-    if (number == 0) {
-        return 0;
-    }
-    return 1 + CountAmountOfDigits(number / 10);
-}
-
-void PrintFibonacci(uint64_t n, uint64_t first, uint64_t second, uint64_t count) {
-    if (count == n) {
-        return;
-    }
-    std::cout << first << " ";
-    PrintFibonacci(n, second, first + second, count + 1);
-}
-
