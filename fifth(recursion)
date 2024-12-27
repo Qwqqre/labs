@@ -19,7 +19,7 @@ int main() {
  
     std::cout << "Sum of digits = " << SumOfDigits(num) << std::endl; 
  
-    std::cout << "Amount of digits" << num << " = " << AmountOfDigits(num) << std::endl; 
+    std::cout << "Amount of digits in number: " << num << " = " << AmountOfDigits(num) << std::endl; 
  
     int64_t size; 
     std::cout << "Input array size: "; 
