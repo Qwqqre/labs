@@ -93,15 +93,11 @@ void LeftShiftArray(int32_t* array, int32_t size, int32_t k) {
         return;
     }
 
-    int32_t temp[size - k];
     for (int32_t i = 0; i < size - k; ++i) {
-        temp[i] = array[k + i];
+        array[i] = array[i + k];
     }
-    for (int32_t i = 0; i < k; ++i) {
-        array[size - k + i] = array[i];
-    }
-    for (int32_t i = 0; i < size - k; ++i) {
-        array[i] = temp[i];
+    for (int32_t i = size - k; i < size; ++i) {
+        array[i] = 0;
     }
 }
 
