@@ -1,0 +1,140 @@
+#define _USE_MATH_DEFINES
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+double FirstFunction(double num) {
+    return pow(tan(num / 2 + M_PI / 4), 3);
+}
+
+double SecondFunction(double num) {
+    return asin(sqrt(num)) / sqrt(num * (1 - num));
+}
+
+double ThirdFunction(double num) {
+    return pow(num, 3) * exp(2 * num);
+}
+
+template <typename T>
+void InputNumber(const char* prompt, T& value) {
+    std::cout << prompt;
+    std::cin >> value;
+}
+
+template <typename T>
+bool CheckPositive(T value) {
+    return value > 0;
+}
+
+double LeftRectangle(double (*Function)(double), double left, double right, int64_t n) {
+    double width = (right - left) / static_cast<double>(n);
+    double sum = 0.0;
+    for (int64_t i = 0; i < n; ++i)
+        sum += width * Function(left + i * width);
+    return sum;
+}
+
+double RightRectangle(double (*Function)(double), double left, double right, int64_t n) {
+    double width = (right - left) / static_cast<double>(n);
+    double sum = 0.0;
+    for (int64_t i = 1; i <= n; ++i)
+        sum += width * Function(left + i * width);
+    return sum;
+}
+
+double Trapezoid(double (*Function)(double), double left, double right, int64_t n) {
+    double width = (right - left) / static_cast<double>(n);
+    double sum = Function(left) + Function(right);
+    for (int64_t i = 1; i < n; ++i)
+        sum += 2.0 * Function(left + i * width);
+    return sum * width / 2.0;
+}
+
+double Simpson(double (*Function)(double), double left, double right, int64_t n) {
+    double width = (right - left) / static_cast<double>(n);
+    double sum = Function(left) + Function(right);
+    for (int64_t i = 1; i < n; ++i)
+        sum += (i % 2 == 0 ? 2 : 4) * Function(left + i * width);
+    return sum * width / 3.0;
+}
+
+double DoubleRectangles(double (*Function)(double), double left, double right, int64_t n) {
+    double precision;
+    InputNumber("Enter precision: ", precision);
+    if (!CheckPositive(precision)) {
+        std::cout << "Invalid precision value.\n";
+        return 0.0;
+    }
+
+    double left_sum, right_sum;
+    do {
+        left_sum = LeftRectangle(Function, left, right, n);
+        right_sum = RightRectangle(Function, left, right, n);
+        n *= 2;
+    } while (std::fabs(left_sum - right_sum) > static_cast<double>(precision));
+    
+    std::cout << "Number of cuts: " << n << '\n';
+    return left_sum;
+}
+
+int main() {
+    double (*functions[])(double) = { FirstFunction, SecondFunction, ThirdFunction };
+    const char* functionDescriptions[] = {
+        "First Function: (tan(x / 2 + π / 4))^3",
+        "Second Function: arcsin(√x) / √(x * (1 - x))",
+        "Third Function: x^3 * e^(2x)"
+    };
+    double (*methods[])(double (*functions)(double), double, double, int64_t) = {
+        LeftRectangle, RightRectangle, DoubleRectangles, Trapezoid, Simpson
+    };
+    const char* methodDescriptions[] = {
+        "Left Rectangle Method",
+        "Right Rectangle Method",
+        "Double Rectangles Method",
+        "Trapezoid Method",
+        "Simpson's Method"
+    };
+
+    int64_t funcIndex, methodIndex, n;
+    double precision;
+    
+    std::cout << "Available functions:\n";
+    for (int i = 0; i < 3; ++i) {
+        std::cout << i << ": " << functionDescriptions[i] << '\n';
+    }
+    InputNumber("Select function (0-2): ", funcIndex);
+    if (funcIndex < 0 || funcIndex > 2) {
+        std::cout << "Invalid function index.\n";
+        return 0;
+    }
+
+    std::cout << "Available methods:\n";
+    for (int i = 0; i < 5; ++i) {
+        std::cout << i << ": " << methodDescriptions[i] << '\n';
+    }
+    InputNumber("Select method (0-4): ", methodIndex);
+    if (methodIndex < 0 || methodIndex > 4) {
+        std::cout << "Invalid method index.\n";
+        return 0;
+    }
+
+    InputNumber("Enter number of cuts: ", n);
+    if (!CheckPositive(n) || (methodIndex == 4 && n % 2 != 0)) {
+        std::cout << "Invalid number of cuts.\n";
+        return 0;
+    }
+
+    InputNumber("Enter precision (number of decimal places): ", precision);
+    if (!CheckPositive(precision)) {
+        std::cout << "Invalid precision value.\n";
+        return 0;
+    }
+
+    const double borders[][2] = { {0.0, M_PI / 8}, {0.2, 0.3}, {0.0, 0.8} };
+    double left = borders[funcIndex][0], right = borders[funcIndex][1];
+
+    std::cout << std::fixed << std::setprecision(static_cast<int>(precision)) << "Integral = " 
+              << methods[methodIndex](functions[funcIndex], left, right, n) << "\n";
+
+    return 0;
+}
