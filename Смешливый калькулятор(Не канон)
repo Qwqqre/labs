@@ -1,0 +1,156 @@
+#include <iostream>
+#include <cstdint>
+#include <cmath>
+#include <clocale>
+
+void InputNumbers(long double& a, long double& b);
+void InputExponent(int32_t& exponent);
+
+long double SumOfNumbers(long double a, long double b);
+long double SubtractionOfNumbers(long double a, long double b);
+long double MultiplicationOfNumbers(long double a, long double b);
+bool DivisionOfNumbers(long double a, long double b, long double& result);
+long double AverageOfNumbers(long double a, long double b);
+long double PowerOfNumber(long double base, int32_t exponent);
+
+uint32_t CountIntegerDigits(long double number);
+uint32_t CountFractionalDigits(long double number);
+uint32_t CountAllDigits(long double number);
+
+int main()
+{
+    std::setlocale(LC_NUMERIC, "C");
+    std::cout.setf(std::ios::fixed);
+    std::cout.precision(6);
+
+    long double num1, num2;
+    InputNumbers(num1, num2);
+
+    long double sum  = SumOfNumbers(num1, num2);
+    long double diff = SubtractionOfNumbers(num1, num2);
+    long double prod = MultiplicationOfNumbers(num1, num2);
+
+    long double quot;
+    bool ok = DivisionOfNumbers(num1, num2, quot);
+
+    long double avg = AverageOfNumbers(num1, num2);
+
+    int32_t exp;
+    InputExponent(exp);
+
+    long double p1 = PowerOfNumber(num1, exp);
+    long double p2 = PowerOfNumber(num2, exp);
+
+    std::cout << "\nРезультаты:\n";
+    std::cout << "Сумма       = " << sum  << "\n";
+    std::cout << "Разность    = " << diff << "\n";
+    std::cout << "Умножение   = " << prod << "\n";
+    if (ok)
+        std::cout << "Деление     = " << quot << "\n";
+    else
+        std::cout << "Деление     = ошибка (деление на ноль)\n";
+    std::cout << "Среднее     = " << avg  << "\n";
+
+    std::cout << "\nВозведение в степень " << exp << ":\n";
+    std::cout << num1 << " ^ " << exp << " = " << p1 << "\n";
+    std::cout << num2 << " ^ " << exp << " = " << p2 << "\n";
+
+    std::cout << "\nАнализ цифр:\n";
+    std::cout << "Число 1      = " << num1 << "\n";
+    std::cout << "  Целых цифр  = " << CountIntegerDigits(num1)    << "\n";
+    std::cout << "  Дробных цифр= " << CountFractionalDigits(num1) << "\n";
+    std::cout << "  Всего цифр  = " << CountAllDigits(num1)        << "\n";
+
+    std::cout << "Число 2      = " << num2 << "\n";
+    std::cout << "  Целых цифр  = " << CountIntegerDigits(num2)    << "\n";
+    std::cout << "  Дробных цифр= " << CountFractionalDigits(num2) << "\n";
+    std::cout << "  Всего цифр  = " << CountAllDigits(num2)        << "\n";
+
+    return 0;
+}
+
+void InputNumbers(long double& a, long double& b)
+{
+    std::cout << "Введите первое число: ";
+    while (!(std::cin >> a)) {
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
+        std::cout << "Ошибка ввода, повторите: ";
+    }
+
+    std::cout << "Введите второе число: ";
+    while (!(std::cin >> b)) {
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
+        std::cout << "Ошибка ввода, повторите: ";
+    }
+}
+
+void InputExponent(int32_t& exponent)
+{
+    std::cout << "Введите степень (целое): ";
+    while (!(std::cin >> exponent)) {
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
+        std::cout << "Ошибка ввода, повторите: ";
+    }
+}
+
+long double SumOfNumbers(long double a, long double b)         { return a + b; }
+long double SubtractionOfNumbers(long double a, long double b) { return a - b; }
+long double MultiplicationOfNumbers(long double a, long double b) { return a * b; }
+
+bool DivisionOfNumbers(long double a, long double b, long double& result)
+{
+    if (b == 0.0L) return false;
+    result = a / b;
+    return true;
+}
+
+long double AverageOfNumbers(long double a, long double b) { return (a + b) / 2.0L; }
+
+long double PowerOfNumber(long double base, int32_t exponent)
+{
+    if (exponent == 0) return 1.0L;
+    bool neg = exponent < 0;
+    uint32_t e = neg ? -exponent : exponent;
+    long double res = 1.0L;
+    while (e) {
+        if (e & 1) res *= base;
+        base *= base;
+        e >>= 1;
+    }
+    return neg ? 1.0L / res : res;
+}
+
+uint32_t CountIntegerDigits(long double number)
+{
+    if (number < 0) number = -number;
+    uint64_t ip = static_cast<uint64_t>(std::floor(number));
+    if (ip == 0) return 1;
+    uint32_t cnt = 0;
+    while (ip) {
+        ip /= 10;
+        ++cnt;
+    }
+    return cnt;
+}
+
+uint32_t CountFractionalDigits(long double number)
+{
+    if (number < 0) number = -number;
+    long double frac = number - std::floor(number);
+    uint32_t cnt = 0;
+    const long double eps = 1e-18L;
+    while (frac > eps && cnt < 18) {
+        frac *= 10;
+        frac -= std::floor(frac);
+        ++cnt;
+    }
+    return cnt;
+}
+
+uint32_t CountAllDigits(long double number)
+{
+    return CountIntegerDigits(number) + CountFractionalDigits(number);
+}
