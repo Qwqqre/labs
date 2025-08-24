@@ -1,156 +1,149 @@
 #include <iostream>
-#include <cstdint>
 #include <cmath>
-#include <clocale>
 
-void InputNumbers(long double& a, long double& b);
-void InputExponent(int32_t& exponent);
+long double Add(long double a, long double b);
+long double Subtract(long double a, long double b);
+long double Multiply(long double a, long double b);
+bool Divide(long double a, long double b, long double& result);
+long double Power(long double base, long double exponent);
+bool SquareRoot(long double x, long double& result);
+bool NaturalLogarithm(long double x, long double& result);
+bool CommonLogarithm(long double x, long double& result);
+long double Sine(long double x);
+long double Cosine(long double x);
+long double Tangent(long double x);
+void ShowMenu();
 
-long double SumOfNumbers(long double a, long double b);
-long double SubtractionOfNumbers(long double a, long double b);
-long double MultiplicationOfNumbers(long double a, long double b);
-bool DivisionOfNumbers(long double a, long double b, long double& result);
-long double AverageOfNumbers(long double a, long double b);
-long double PowerOfNumber(long double base, int32_t exponent);
-
-uint32_t CountIntegerDigits(long double number);
-uint32_t CountFractionalDigits(long double number);
-uint32_t CountAllDigits(long double number);
-
-int main()
-{
-    std::setlocale(LC_NUMERIC, "C");
+int main() {
     std::cout.setf(std::ios::fixed);
     std::cout.precision(6);
 
-    long double num1, num2;
-    InputNumbers(num1, num2);
+    int choice;
+    long double num1 = 0.0, num2 = 0.0, result;
+    do {
+        ShowMenu();
+        std::cout << "Ваш выбор: ";
+        std::cin >> choice;
 
-    long double sum  = SumOfNumbers(num1, num2);
-    long double diff = SubtractionOfNumbers(num1, num2);
-    long double prod = MultiplicationOfNumbers(num1, num2);
+        if (choice == 0) break;
 
-    long double quot;
-    bool ok = DivisionOfNumbers(num1, num2, quot);
+        if (choice >= 1 && choice <= 5) {
+            std::cout << "Введите два числа: ";
+            std::cin >> num1 >> num2;
+        } else if (choice >= 6 && choice <= 8) {
+            std::cout << "Введите число: ";
+            std::cin >> num1;
+        } else if (choice >= 9 && choice <= 11) {
+            std::cout << "Введите угол в радианах: ";
+            std::cin >> num1;
+        }
 
-    long double avg = AverageOfNumbers(num1, num2);
+        switch (choice) {
+            case 1:
+                std::cout << "Результат: " << num1 << " + " << num2 << " = " << Add(num1, num2) << "\n";
+                break;
+            case 2:
+                std::cout << "Результат: " << num1 << " - " << num2 << " = " << Subtract(num1, num2) << "\n";
+                break;
+            case 3:
+                std::cout << "Результат: " << num1 << " * " << num2 << " = " << Multiply(num1, num2) << "\n";
+                break;
+            case 4:
+                if (Divide(num1, num2, result))
+                    std::cout << "Результат: " << num1 << " / " << num2 << " = " << result << "\n";
+                else
+                    std::cout << "Ошибка: деление на ноль невозможно.\n";
+                break;
+            case 5:
+                std::cout << "Результат: " << num1 << " ^ " << num2 << " = " << Power(num1, num2) << "\n";
+                break;
+            case 6:
+                if (SquareRoot(num1, result))
+                    std::cout << "Результат: √" << num1 << " = " << result << "\n";
+                else
+                    std::cout << "Ошибка: нельзя извлечь корень из отрицательного числа.\n";
+                break;
+            case 7:
+                if (NaturalLogarithm(num1, result))
+                    std::cout << "Результат: ln(" << num1 << ") = " << result << "\n";
+                else
+                    std::cout << "Ошибка: логарифм от неположительного числа не определён.\n";
+                break;
+            case 8:
+                if (CommonLogarithm(num1, result))
+                    std::cout << "Результат: log10(" << num1 << ") = " << result << "\n";
+                else
+                    std::cout << "Ошибка: логарифм от неположительного числа не определён.\n";
+                break;
+            case 9:
+                std::cout << "Результат: sin(" << num1 << ") = " << Sine(num1) << "\n";
+                break;
+            case 10:
+                std::cout << "Результат: cos(" << num1 << ") = " << Cosine(num1) << "\n";
+                break;
+            case 11:
+                std::cout << "Результат: tan(" << num1 << ") = " << Tangent(num1) << "\n";
+                break;
+            default:
+                std::cout << "Неверный выбор. Попробуйте снова.\n";
+        }
 
-    int32_t exp;
-    InputExponent(exp);
+        std::cout << "(значение округлено до 6 знаков после запятой)\n";
 
-    long double p1 = PowerOfNumber(num1, exp);
-    long double p2 = PowerOfNumber(num2, exp);
+    } while (true);
 
-    std::cout << "\nРезультаты:\n";
-    std::cout << "Сумма       = " << sum  << "\n";
-    std::cout << "Разность    = " << diff << "\n";
-    std::cout << "Умножение   = " << prod << "\n";
-    if (ok)
-        std::cout << "Деление     = " << quot << "\n";
-    else
-        std::cout << "Деление     = ошибка (деление на ноль)\n";
-    std::cout << "Среднее     = " << avg  << "\n";
-
-    std::cout << "\nВозведение в степень " << exp << ":\n";
-    std::cout << num1 << " ^ " << exp << " = " << p1 << "\n";
-    std::cout << num2 << " ^ " << exp << " = " << p2 << "\n";
-
-    std::cout << "\nАнализ цифр:\n";
-    std::cout << "Число 1      = " << num1 << "\n";
-    std::cout << "  Целых цифр  = " << CountIntegerDigits(num1)    << "\n";
-    std::cout << "  Дробных цифр= " << CountFractionalDigits(num1) << "\n";
-    std::cout << "  Всего цифр  = " << CountAllDigits(num1)        << "\n";
-
-    std::cout << "Число 2      = " << num2 << "\n";
-    std::cout << "  Целых цифр  = " << CountIntegerDigits(num2)    << "\n";
-    std::cout << "  Дробных цифр= " << CountFractionalDigits(num2) << "\n";
-    std::cout << "  Всего цифр  = " << CountAllDigits(num2)        << "\n";
-
+    std::cout << "\nСпасибо за использование калькулятора. До встречи!\n";
     return 0;
 }
 
-void InputNumbers(long double& a, long double& b)
-{
-    std::cout << "Введите первое число: ";
-    while (!(std::cin >> a)) {
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
-        std::cout << "Ошибка ввода, повторите: ";
-    }
+long double Add(long double a, long double b)       { return a + b; }
+long double Subtract(long double a, long double b)  { return a - b; }
+long double Multiply(long double a, long double b)  { return a * b; }
 
-    std::cout << "Введите второе число: ";
-    while (!(std::cin >> b)) {
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
-        std::cout << "Ошибка ввода, повторите: ";
-    }
-}
-
-void InputExponent(int32_t& exponent)
-{
-    std::cout << "Введите степень (целое): ";
-    while (!(std::cin >> exponent)) {
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
-        std::cout << "Ошибка ввода, повторите: ";
-    }
-}
-
-long double SumOfNumbers(long double a, long double b)         { return a + b; }
-long double SubtractionOfNumbers(long double a, long double b) { return a - b; }
-long double MultiplicationOfNumbers(long double a, long double b) { return a * b; }
-
-bool DivisionOfNumbers(long double a, long double b, long double& result)
-{
+bool Divide(long double a, long double b, long double& result) {
     if (b == 0.0L) return false;
     result = a / b;
     return true;
 }
 
-long double AverageOfNumbers(long double a, long double b) { return (a + b) / 2.0L; }
-
-long double PowerOfNumber(long double base, int32_t exponent)
-{
-    if (exponent == 0) return 1.0L;
-    bool neg = exponent < 0;
-    uint32_t e = neg ? -exponent : exponent;
-    long double res = 1.0L;
-    while (e) {
-        if (e & 1) res *= base;
-        base *= base;
-        e >>= 1;
-    }
-    return neg ? 1.0L / res : res;
+long double Power(long double base, long double exponent) {
+    return std::pow(base, exponent);
 }
 
-uint32_t CountIntegerDigits(long double number)
-{
-    if (number < 0) number = -number;
-    uint64_t ip = static_cast<uint64_t>(std::floor(number));
-    if (ip == 0) return 1;
-    uint32_t cnt = 0;
-    while (ip) {
-        ip /= 10;
-        ++cnt;
-    }
-    return cnt;
+bool SquareRoot(long double x, long double& result) {
+    if (x < 0.0L) return false;
+    result = std::sqrt(x);
+    return true;
 }
 
-uint32_t CountFractionalDigits(long double number)
-{
-    if (number < 0) number = -number;
-    long double frac = number - std::floor(number);
-    uint32_t cnt = 0;
-    const long double eps = 1e-18L;
-    while (frac > eps && cnt < 18) {
-        frac *= 10;
-        frac -= std::floor(frac);
-        ++cnt;
-    }
-    return cnt;
+bool NaturalLogarithm(long double x, long double& result) {
+    if (x <= 0.0L) return false;
+    result = std::log(x);
+    return true;
 }
 
-uint32_t CountAllDigits(long double number)
-{
-    return CountIntegerDigits(number) + CountFractionalDigits(number);
+bool CommonLogarithm(long double x, long double& result) {
+    if (x <= 0.0L) return false;
+    result = std::log10(x);
+    return true;
+}
+
+long double Sine(long double x)   { return std::sin(x); }
+long double Cosine(long double x) { return std::cos(x); }
+long double Tangent(long double x){ return std::tan(x); }
+
+void ShowMenu() {
+    std::cout << "\nДоступные операции:\n";
+    std::cout << "  1. Сложение\n";
+    std::cout << "  2. Вычитание\n";
+    std::cout << "  3. Умножение\n";
+    std::cout << "  4. Деление\n";
+    std::cout << "  5. Возведение в степень\n";
+    std::cout << "  6. Корень\n";
+    std::cout << "  7. Натуральный логарифм\n";
+    std::cout << "  8. Десятичный логарифм\n";
+    std::cout << "  9. Синус\n";
+    std::cout << " 10. Косинус\n";
+    std::cout << " 11. Тангенс\n";
+    std::cout << "  0. Выход\n";
 }
