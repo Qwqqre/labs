@@ -1,0 +1,64 @@
+\subsection{Задача 3. Нахождение пределов через интегральные суммы}
+
+Найдём пределы
+
+
+\[
+L_1 = \lim_{n\to\infty}
+\Bigl(\tfrac1{n+1} + \tfrac1{n+2} + \cdots + \tfrac1{n+n}\Bigr),
+\qquad
+L_2 = \lim_{n\to\infty}
+\Bigl(\tfrac1{(n+1)^2} + \tfrac1{(n+2)^2} + \cdots + \tfrac1{(n+n)^2}\Bigr).
+\]
+
+
+
+\paragraph{Решение.}
+
+\begin{enumerate}
+  \item
+    Перепишем первую сумму в виде интегральной (Римана)
+    
+
+\[
+      \sum_{k=1}^n \frac1{n+k}
+      = \sum_{k=1}^n \frac1n \;\frac1{1 + \tfrac{k}{n}}
+      \;\longrightarrow\;
+      \int_{0}^{1} \frac{dx}{1 + x}
+      = \bigl[\ln(1+x)\bigr]_{0}^{1}
+      = \ln 2.
+    \]
+
+
+    Следовательно, 
+    
+
+\[
+      L_1 = \ln 2.
+    \]
+
+
+
+  \item
+    Аналогично для второй суммы:
+    
+
+\[
+      \sum_{k=1}^n \frac1{(n+k)^2}
+      = \sum_{k=1}^n \frac1{n^2} \;\frac1{\bigl(1 + \tfrac{k}{n}\bigr)^2}
+      = \frac1n \;\sum_{k=1}^n \frac1n \;\frac1{(1 + \tfrac{k}{n})^2}
+      \;\longrightarrow\;
+      0 \cdot \int_{0}^{1} \frac{dx}{(1 + x)^2}
+      = 0.
+    \]
+
+
+    Поэтому 
+    
+
+\[
+      L_2 = 0.
+    \]
+
+
+\end{enumerate}
