@@ -1,0 +1,24 @@
+\begin{equation}\label{eq:jacobian}
+J(x) \;=\;
+\begin{pmatrix}
+  \displaystyle\frac{\partial u_1}{\partial x_1}(x) & 
+  \displaystyle\frac{\partial u_1}{\partial x_2}(x) & 
+  \cdots & 
+  \displaystyle\frac{\partial u_1}{\partial x_n}(x) \
+
+\[1ex]
+  \displaystyle\frac{\partial u_2}{\partial x_1}(x) & 
+  \displaystyle\frac{\partial u_2}{\partial x_2}(x) & 
+  \cdots & 
+  \displaystyle\frac{\partial u_2}{\partial x_n}(x) \
+
+\[1ex]
+  \vdots & \vdots & \ddots & \vdots \
+
+\[1ex]
+  \displaystyle\frac{\partial u_m}{\partial x_1}(x) & 
+  \displaystyle\frac{\partial u_m}{\partial x_2}(x) & 
+  \cdots & 
+  \displaystyle\frac{\partial u_m}{\partial x_n}(x)
+\end{pmatrix}
+\end{equation}
